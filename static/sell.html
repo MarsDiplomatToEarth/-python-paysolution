@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>商店</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dist/semantic.min.css">
+    <style type="text/css">
+        a,
+        div,
+        p,
+        h {
+            word-wrap: break-word;
+            word-break: normal;
+        }
+        
+        .wa {
+            width: 10%;
+        }
+        
+        .scroller {
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        
+        .scrollersmall {
+            height: 20%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        
+        .mobilebody {
+            height: 85%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        
+        .filescroller {
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        
+        .centert {
+            text-align: center;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        
+        .rightt {
+            text-align: right;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        
+        .ui.action.input>.button,
+        .ui.action.input>.buttons>.button {
+            padding-top: .78571429em;
+            padding-bottom: .78571429em;
+            margin: 1px;
+        }
+    </style>
+    <script src="js/jquery.js"></script>
+    <script src="dist/semantic.min.js"></script>
+    <script src="js/package.js"></script>
+</head>
+
+<body>
+
+    <div class="ui top attached menu">
+        <div class="header item">
+            商店
+        </div>
+        <div class="right menu">
+            <a class="ui dropdown item">
+                其他选项
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div id="contact" class="item">联系客服</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="ui container">
+
+        <div class="ui segment">
+            <div class="ui message">
+                <div class="header">
+                    商品详情
+                </div>
+                <p>这是关于微信支付宝免签回调的学习资料和所有源码,包括网页端,内含有python,php,nodejs,javaweb的服务器端回调源码。</p>
+            </div>
+        </div>
+
+        <div class="ui segment">
+            <form class="ui form">
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            选择商品
+                        </div>
+                        <input type="text" placeholder="请输入商品名称" readonly="readonly" value="免签回调所有学习资料,流程,源码(可直接用)">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            商品价格
+                        </div>
+                        <input id="price" type="text" placeholder="请输入商品价格" value="0.01元">
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            库存数量
+                        </div>
+                        <input id="shopquantity" type="text" placeholder="请输入库存数量" readonly="readonly" value="还有很多">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            下单份数
+                        </div>
+                        <input id="buyquantity" type="text" readonly="readonly" oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入您要购买几份" value="1">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            你的邮箱
+                        </div>
+                        <input id="mail" type="email" title="email" required pattern="^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$" placeholder="请输入您的邮箱">
+                    </div>
+                </div>
+                <h4 class="ui dividing header"></h4>
+
+                <div class="field">
+                    <button id="buy" class="fluid ui button" type="button">购买</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="ui pay modal">
+        <i class="close icon"></i>
+        <div class="header">
+            支付
+        </div>
+        <div class="content">
+            <div class="ui centered card">
+                <div class="content">
+                    <a class="header">支付金额:<span id="paymoney">12.99</span></a>
+                    <div class="meta">
+                        <span class="date">订单号: <span id="paynum">12.99</span></span>
+                    </div>
+                    <div class="description">
+                        请一定要支付准确金额，请注意！根据显示金额精确到分！否则无法自动到账！谢谢合作，如果无法充值请联系客服
+                    </div>
+                </div>
+                <div class="image">
+                    <img src="img/alipay.png">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div id="quitpay" class="ui negative black button">
+                取消支付
+            </div>
+        </div>
+    </div>
+    <script>
+        address = "http://localhost:666"
+        $('.ui.dropdown.item').dropdown({
+            action: 'combo'
+        });
+    </script>
+
+    <script>
+        function ispayed() {
+
+            $.ajax({
+                type: "post",
+                url: address + "/httppaystatus",
+                data: 'paynum=' + paynum,
+                dataType: 'text',
+                success: function(m) {
+                    if (m.toString() == "f") {
+                        lo("正在支付")
+                        setTimeout(ispayed, 3000);
+                    } else if (m.toString().startsWith("s")) {
+                        $('.ui.pay.modal').modal('hide');
+                        alert("支付成功-" + m.toString().replace("s", ""))
+                    } else {
+                        lo("订单取消了或已支付.")
+                        return;
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    lo("出错了")
+                    return;
+                }
+
+            });
+        }
+    </script>
+
+    <script>
+        $("#buy").click(function() {
+            paymoney = $('#price').val().replace("元", "");
+            var fix_amountTest = /^(([1-9]\d*)|\d)(\.\d{1,2})?$/;
+            var fix_mailTest = /^\w+@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/;
+            if (fix_mailTest.test($('#mail').val()) == false) {
+                alert("请输入有效邮箱");
+                return;
+            }
+            if (fix_amountTest.test(paymoney) == false) {
+                alert("请输入有效金额");
+                return;
+            } else {
+                lo(paymoney)
+                if (Number(paymoney) > 0.99) {
+                    hpaymoney = (Number(paymoney) - 1).toString() + "." + (Math.floor(Math.random() * 90) + 10).toString();
+                    paynum = "00" + hpaymoney.replace(".", "")
+                    lo(hpaymoney)
+                    $('#paymoney').text(hpaymoney);
+                    $('#paynum').text(paynum);
+                    $.ajax({
+                        type: "post",
+                        url: address + "/httpcreatepayment",
+                        data: {
+                            'paynum': paynum,
+                            "mail": $('#mail').val()
+                        },
+                        dataType: 'text',
+                        success: function(m) {
+                            lo(m)
+                            ispayed();
+                        }
+                    });
+                } else if (Number(paymoney) < 1 && Number(paymoney) > 0.09) {
+                    hpaymoney = paymoney + "0";
+                    paynum = "00" + hpaymoney.replace(".", "")
+                    lo(hpaymoney)
+                    $('#paymoney').text(hpaymoney);
+                    $('#paynum').text(paynum);
+                    $.ajax({
+                        type: "post",
+                        url: address + "/httpcreatepayment",
+                        data: {
+                            'paynum': paynum,
+                            "mail": $('#mail').val()
+                        },
+                        dataType: 'text',
+                        success: function(m) {
+                            lo(m)
+                            ispayed();
+                        }
+                    });
+                } else {
+                    hpaymoney = paymoney;
+                    paynum = "00" + hpaymoney.replace(".", "")
+                    lo(hpaymoney)
+                    $('#paymoney').text(hpaymoney);
+                    $('#paynum').text(paynum);
+                    $.ajax({
+                        type: "post",
+                        url: address + "/httpcreatepayment",
+                        data: {
+                            'paynum': paynum,
+                            "mail": $('#mail').val()
+                        },
+                        dataType: 'text',
+                        success: function(m) {
+                            lo(m)
+                            ispayed();
+                        }
+                    });
+                }
+
+            }
+
+            $('.ui.pay.modal').modal('show');
+        })
+
+        $("#quitpay").click(function() {
+            $.ajax({
+                type: "post",
+                url: address + "/httpquitpayment",
+                data: 'paynum=' + paynum,
+                dataType: 'text',
+                success: function(m) {
+                    lo(m)
+                    ispayed();
+                }
+            });
+        })
+    </script>
+
+</body>
+
+</html>
