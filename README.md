@@ -1,6 +1,6 @@
 # -python-paysolution
-(服务器端python版本)(完全免费开源)支付宝微信支付收款免签回调,二维码支付监听器,即时通知服务器端,资金直接到达本人账号,无需备案,无需签约,无需root
 
+目前只有一个python flask的服务器版本做demo，核心功能都在服务器端，如果你是开发者请进群我们一起来。
 ### 下载(下载不了clone到gitee上然后下载速度快很多)
 
 安卓端 https://github.com/MarsDiplomatToEarth/paysolution/blob/master/getpayment.apk?raw=true
