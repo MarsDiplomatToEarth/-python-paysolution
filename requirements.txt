@@ -1,5 +1,5 @@
 adbutils==0.7.1
-aiohttp==3.6.2
+aiohttp==3.7.4
 apkutils2==1.0.0
 APScheduler==3.6.3
 async-lru==1.0.2
