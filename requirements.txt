@@ -59,7 +59,7 @@ prompt-toolkit==3.0.2
 py==1.8.1
 pydantic==1.5.1
 pyelftools==0.26
-Pygments==2.5.2
+Pygments==2.7.4
 pyparsing==2.4.6
 pypng==0.0.20
 PyQRCode==1.2.1
