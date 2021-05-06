@@ -21,7 +21,7 @@ entrypoints==0.3
 facebook-wda==0.4.2
 Flask==1.1.1
 Flask-APScheduler==1.11.0
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-Login==0.5.0
 Flask-SocketIO==4.2.1
 humanize==0.5.1
