@@ -57,7 +57,7 @@ progress==1.5
 prometheus-client==0.7.1
 prompt-toolkit==3.0.2
 py==1.8.1
-pydantic==1.5.1
+pydantic==1.6.2
 pyelftools==0.26
 Pygments==2.5.2
 pyparsing==2.4.6
